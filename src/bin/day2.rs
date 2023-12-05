@@ -18,6 +18,16 @@ struct Game {
     events: Vec<Sample>,
 }
 
+impl Game {
+    fn min_power(&self) -> u32 {
+        let min_red: u32 = self.events.iter().map(|s| s.red).max().unwrap_or(0);
+        let min_green: u32 = self.events.iter().map(|s| s.green).max().unwrap_or(0);
+        let min_blue: u32 = self.events.iter().map(|s| s.blue).max().unwrap_or(0);
+
+        return min_red * min_green * min_blue;
+    }
+}
+
 fn read_events(text: &str) -> Vec<Sample> {
     let mut events = vec![];
     for event_str in text.trim().split(';') {
@@ -86,6 +96,20 @@ fn task1() {
     println!("Sum of possible games: {}", possible_sum);
 }
 
+fn task2() {
+    let input = "day2task2.in";
+    let file_content = std::fs::read_to_string(input).expect("failed to read input file");
+
+    let mut power_sum: u32 = 0;
+
+    for line in file_content.lines() {
+        let game = read_game(line);
+        power_sum += game.min_power();
+    }
+
+    println!("Sum of powers is: {}", power_sum);
+}
+
 fn main() {
-    task1();
+    task2();
 }
